@@ -54,5 +54,90 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         // Set the background color of the sticker sheet layout
         val savedStickerLayout = findViewById<ConstraintLayout>(R.id.saved_sticker_sheet_layout)
         savedStickerLayout.setBackgroundColor(backgroundColor)
+
+        val category1view = findViewById<TextView>(R.id.saved_category_1)
+        category1view.setText(category1)
+        category1view.setTextColor(textColor)
+
+        val task1_1view = findViewById<TextView>(R.id.saved_task_1_1)
+        task1_1view.setText(task1_1)
+        task1_1view.setTextColor(textColor)
+
+        val task1_2view = findViewById<TextView>(R.id.saved_task_1_2)
+        task1_2view.setText(task1_2)
+        task1_2view.setTextColor(textColor)
+
+        val task1_3view = findViewById<TextView>(R.id.saved_task_1_3)
+        task1_3view.setText(task1_3)
+        task1_3view.setTextColor(textColor)
+
+
+        val category2view = findViewById<TextView>(R.id.saved_category_2)
+        category2view.setText(category2)
+        category2view.setTextColor(textColor)
+
+        val task2_1view = findViewById<TextView>(R.id.saved_task_2_1)
+        task2_1view.setText(task2_1)
+        task2_1view.setTextColor(textColor)
+
+        val task2_2view = findViewById<TextView>(R.id.saved_task_2_2)
+        task2_2view.setText(task2_2)
+        task2_2view.setTextColor(textColor)
+
+        val task2_3view = findViewById<TextView>(R.id.saved_task_2_3)
+        task2_3view.setText(task2_3)
+        task2_3view.setTextColor(textColor)
+
+
+        val category3view = findViewById<TextView>(R.id.saved_category_3)
+        category3view.setText(category3)
+        category3view.setTextColor(textColor)
+
+        val task3_1view = findViewById<TextView>(R.id.saved_task_3_1)
+        task3_1view.setText(task3_1)
+        task3_1view.setTextColor(textColor)
+
+        val task3_2view = findViewById<TextView>(R.id.saved_task_3_2)
+        task3_2view.setText(task3_2)
+        task3_2view.setTextColor(textColor)
+
+        val task3_3view = findViewById<TextView>(R.id.saved_task_3_3)
+        task3_3view.setText(task3_3)
+        task3_3view.setTextColor(textColor)
+
+
+        val category4view = findViewById<TextView>(R.id.saved_category_4)
+        category4view.setText(category4)
+        category4view.setTextColor(textColor)
+
+        val task4_1view = findViewById<TextView>(R.id.saved_task_4_1)
+        task4_1view.setText(task4_1)
+        task4_1view.setTextColor(textColor)
+
+        val task4_2view = findViewById<TextView>(R.id.saved_task_4_2)
+        task4_2view.setText(task4_2)
+        task4_2view.setTextColor(textColor)
+
+        val task4_3view = findViewById<TextView>(R.id.saved_task_4_3)
+        task4_3view.setText(task4_3)
+        task4_3view.setTextColor(textColor)
+
+
+        val category5view = findViewById<TextView>(R.id.saved_category_5)
+        category5view.setText(category5)
+        category5view.setTextColor(textColor)
+
+        val task5_1view = findViewById<TextView>(R.id.saved_task_5_1)
+        task5_1view.setText(task5_1)
+        task5_1view.setTextColor(textColor)
+
+        val task5_2view = findViewById<TextView>(R.id.saved_task_5_2)
+        task5_2view.setText(task5_2)
+        task5_2view.setTextColor(textColor)
+
+        val task5_3view = findViewById<TextView>(R.id.saved_task_5_3)
+        task5_3view.setText(task5_3)
+        task5_3view.setTextColor(textColor)
+
     }
 }
