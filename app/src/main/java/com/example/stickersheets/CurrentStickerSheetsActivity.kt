@@ -6,16 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.TextView
-import android.widget.ListView
 import android.widget.Button
 import android.view.View
 import android.widget.ArrayAdapter
+import android.content.Intent
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
 
 
 class CurrentStickerSheetsActivity : AppCompatActivity() {
 
     private lateinit var noSheetsMessage: TextView
-    private lateinit var stickerSheetsListView: ListView
+    private lateinit var stickerSheetsRecyclerView: RecyclerView
+    private lateinit var stickerSheetAdapter: StickerSheetAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +33,8 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         }
 
         noSheetsMessage = findViewById(R.id.noSheetsMessage)
-        stickerSheetsListView = findViewById(R.id.stickerSheetsListView)
+        stickerSheetsRecyclerView =
+            findViewById(R.id.stickerSheetsRecyclerView)
         val backToHomeButton = findViewById<Button>(R.id.backToHomeButton)
 
         backToHomeButton.setOnClickListener {
@@ -36,19 +42,40 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         }
 
         // Load your sticker sheets data here
-        val stickerSheets = loadStickerSheets() // Replace with your actual method to load sheets
+        val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
+        val allEntries = sharedPreferences.all
 
-        if (stickerSheets.isEmpty()) {
-            noSheetsMessage.visibility = View.VISIBLE
-        } else {
-            stickerSheetsListView.visibility = View.VISIBLE
-            // Set up your ListView adapter to display the sticker sheets here
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, stickerSheets)
-            stickerSheetsListView.adapter = adapter
+        // Extract the titles (which will be the keys)
+        val stickerSheetTitles = ArrayList<String>()
+        for ((key, _) in allEntries) {
+            stickerSheetTitles.add(key)
         }
-    }
-    private fun loadStickerSheets(): List<String> {
-        // Replace with your logic to load sticker sheets
-        return emptyList() // Placeholder: return an empty list for testing
+
+        // Set up RecyclerView
+        stickerSheetsRecyclerView.layoutManager = LinearLayoutManager(this)
+        stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles) { title ->
+            val intent = Intent(this, SavedStickerSheetActivity::class.java)
+            intent.putExtra("title", title)
+            startActivity(intent)
+        }
+
+        stickerSheetsRecyclerView.adapter = stickerSheetAdapter
+
+        // Check if there are no sheets and update visibility accordingly
+        if (stickerSheetTitles.isEmpty()) {
+            noSheetsMessage.visibility = View.VISIBLE
+            stickerSheetsRecyclerView.visibility = View.GONE // Hide RecyclerView if no sheets
+        } else {
+            noSheetsMessage.visibility = View.GONE // Hide message if there are sheets
+            stickerSheetsRecyclerView.visibility = View.VISIBLE // Show RecyclerView
+        }
+
+        stickerSheetAdapter.setOnItemClickListener { title ->
+            // Pass the title to SavedStickerSheetActivity and open the sheet
+            val intent = Intent(this, SavedStickerSheetActivity::class.java)
+            intent.putExtra("title", title)
+            startActivity(intent)
+        }
+
     }
 }

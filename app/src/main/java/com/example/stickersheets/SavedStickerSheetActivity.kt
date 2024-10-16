@@ -198,5 +198,14 @@ class SavedStickerSheetActivity : AppCompatActivity() {
             finish() // Optional: Closes the current activity
         }
 
+        // Save the sticker sheet to SharedPreferences
+        val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+// Use the title as a key and save its details as a JSON string
+        editor.putString(title, "$selectedBackgroundColor,$selectedTextColor")
+        editor.apply()
+
+
     }
 }
