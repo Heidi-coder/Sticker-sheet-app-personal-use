@@ -202,9 +202,14 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
+
+
+
 // Use the title as a key and save its details as a JSON string
-        editor.putString(title, "$selectedBackgroundColor,$selectedTextColor")
+        editor.putString(title, "$backgroundColor,$textColor")
         editor.apply()
+
+        val savedData = sharedPreferences.getString(title, "No Data Found") // Retrieve using the same key (title)
 
 
     }

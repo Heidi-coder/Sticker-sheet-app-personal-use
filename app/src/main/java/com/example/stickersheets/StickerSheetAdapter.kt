@@ -5,10 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.util.Log
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import android.content.Intent
+
 
 
 class StickerSheetAdapter(
     private val stickerSheets: List<String>,
+    private val backgroundColors: List<Int>, // List of background colors
+    private val textColors: List<Int>, // List of text colors
     private val clickListener: (String) -> Unit
 ) : RecyclerView.Adapter<StickerSheetAdapter.ViewHolder>() {
 
@@ -23,7 +30,9 @@ class StickerSheetAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = stickerSheets.size
+    override fun getItemCount(): Int {
+        return stickerSheets.size
+    }
 
     private var onItemClickListener: ((String) -> Unit)? = null
 
@@ -40,8 +49,19 @@ class StickerSheetAdapter(
 
         // Attach click listener to each sticker sheet
         holder.itemView.setOnClickListener {
-            clickListener(stickerSheetTitle)
+            // Create the intent to start SavedStickerSheetActivity
+            val intent = Intent(holder.itemView.context, SavedStickerSheetActivity::class.java).apply {
+                // Pass the title and any other data you need
+                putExtra("TITLE", stickerSheetTitle)
+                putExtra("BACKGROUND_COLOR", backgroundColors[position])
+                putExtra("TEXT_COLOR", textColors[position])
+            }
+            // Start the activity using the context from the itemView
+            holder.itemView.context.startActivity(intent)
         }
+        holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.lightPink))
     }
 
 }
+
+

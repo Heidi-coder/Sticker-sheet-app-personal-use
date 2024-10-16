@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.content.Intent
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.util.Log
 
 
 
@@ -51,6 +52,12 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
             stickerSheetTitles.add(key)
         }
 
+        stickerSheetTitles.clear() // Clear the list to avoid duplicates
+        for (entry in allEntries) {
+            entry.key?.let { stickerSheetTitles.add(it) } // Add non-null keys only
+        }
+
+
         // Set up RecyclerView
         stickerSheetsRecyclerView.layoutManager = LinearLayoutManager(this)
         stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles) { title ->
@@ -60,6 +67,10 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         }
 
         stickerSheetsRecyclerView.adapter = stickerSheetAdapter
+
+        stickerSheetAdapter.notifyDataSetChanged() // Ensure the RecyclerView is aware of data changes
+
+
 
         // Check if there are no sheets and update visibility accordingly
         if (stickerSheetTitles.isEmpty()) {
