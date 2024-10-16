@@ -230,6 +230,7 @@ class NewStickerSheetActivity : AppCompatActivity() {
             builder.show()
         }
 
+
         saveButton.setOnClickListener {
             saveStickerSheet()
         }
@@ -261,7 +262,6 @@ class NewStickerSheetActivity : AppCompatActivity() {
         val task5_1 = findViewById<EditText>(R.id.task_5_1).text.toString()
         val task5_2 = findViewById<EditText>(R.id.task_5_2).text.toString()
         val task5_3 = findViewById<EditText>(R.id.task_5_3).text.toString()
-
 
         // Retrieve selected colors
 
