@@ -13,6 +13,8 @@ import android.widget.Button
 import android.content.Intent
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import org.json.JSONObject
+
 
 
 
@@ -26,30 +28,41 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         val backgroundColor = intent.getIntExtra("BACKGROUND_COLOR", Color.WHITE)
         val textColor = intent.getIntExtra("TEXT_COLOR", Color.BLACK)
 
-        val category1 = intent.getStringExtra("CATEGORY_1")
-        val task1_1 = intent.getStringExtra("TASK_1_1")
-        val task1_2 = intent.getStringExtra("TASK_1_2")
-        val task1_3 = intent.getStringExtra("TASK_1_3")
+        val category1 = intent.getStringExtra("CATEGORY_1") ?: ""
+        val task1_1 = intent.getStringExtra("TASK_1_1") ?: ""
+        val task1_2 = intent.getStringExtra("TASK_1_2") ?: ""
+        val task1_3 = intent.getStringExtra("TASK_1_3") ?: ""
 
-        val category2 = intent.getStringExtra("CATEGORY_2")
-        val task2_1 = intent.getStringExtra("TASK_2_1")
-        val task2_2 = intent.getStringExtra("TASK_2_2")
-        val task2_3 = intent.getStringExtra("TASK_2_3")
+        val category2 = intent.getStringExtra("CATEGORY_2") ?: ""
+        val task2_1 = intent.getStringExtra("TASK_2_1") ?: ""
+        val task2_2 = intent.getStringExtra("TASK_2_2") ?: ""
+        val task2_3 = intent.getStringExtra("TASK_2_3") ?: ""
 
-        val category3 = intent.getStringExtra("CATEGORY_3")
-        val task3_1 = intent.getStringExtra("TASK_3_1")
-        val task3_2 = intent.getStringExtra("TASK_3_2")
-        val task3_3 = intent.getStringExtra("TASK_3_3")
+        val category3 = intent.getStringExtra("CATEGORY_3") ?: ""
+        val task3_1 = intent.getStringExtra("TASK_3_1") ?: ""
+        val task3_2 = intent.getStringExtra("TASK_3_2") ?: ""
+        val task3_3 = intent.getStringExtra("TASK_3_3") ?: ""
 
-        val category4 = intent.getStringExtra("CATEGORY_4")
-        val task4_1 = intent.getStringExtra("TASK_4_1")
-        val task4_2 = intent.getStringExtra("TASK_4_2")
-        val task4_3 = intent.getStringExtra("TASK_4_3")
+        val category4 = intent.getStringExtra("CATEGORY_4") ?: ""
+        val task4_1 = intent.getStringExtra("TASK_4_1") ?: ""
+        val task4_2 = intent.getStringExtra("TASK_4_2") ?: ""
+        val task4_3 = intent.getStringExtra("TASK_4_3") ?: ""
 
-        val category5 = intent.getStringExtra("CATEGORY_5")
-        val task5_1 = intent.getStringExtra("TASK_5_1")
-        val task5_2 = intent.getStringExtra("TASK_5_2")
-        val task5_3 = intent.getStringExtra("TASK_5_3")
+        val category5 = intent.getStringExtra("CATEGORY_5") ?: ""
+        val task5_1 = intent.getStringExtra("TASK_5_1") ?: ""
+        val task5_2 = intent.getStringExtra("TASK_5_2") ?: ""
+        val task5_3 = intent.getStringExtra("TASK_5_3") ?: ""
+
+// Now create a list containing all the values
+        val tableData: List<String> = listOf(
+            category1, task1_1, task1_2, task1_3,
+            category2, task2_1, task2_2, task2_3,
+            category3, task3_1, task3_2, task3_3,
+            category4, task4_1, task4_2, task4_3,
+            category5, task5_1, task5_2, task5_3
+        )
+
+
 
         // Apply the title and colors
         val titleView = findViewById<TextView>(R.id.saved_sticker_sheet_title)
@@ -202,11 +215,16 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-
+        val stickerSheetJson = JSONObject().apply {
+            put("title", title)
+            put("backgroundColor", backgroundColor)
+            put("textColor", textColor)
+            put("tableData", tableData)
+        }
 
 
 // Use the title as a key and save its details as a JSON string
-        editor.putString(title, "$backgroundColor,$textColor")
+        editor.putString(title, stickerSheetJson.toString())
         editor.apply()
 
         val savedData = sharedPreferences.getString(title, "No Data Found") // Retrieve using the same key (title)

@@ -13,6 +13,8 @@ import android.content.Intent
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
+import androidx.core.content.ContextCompat
+
 
 
 
@@ -49,18 +51,35 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         // Extract the titles (which will be the keys)
         val stickerSheetTitles = ArrayList<String>()
         for ((key, _) in allEntries) {
-            stickerSheetTitles.add(key)
+            key?.let { stickerSheetTitles.add(it) }
         }
 
-        stickerSheetTitles.clear() // Clear the list to avoid duplicates
-        for (entry in allEntries) {
-            entry.key?.let { stickerSheetTitles.add(it) } // Add non-null keys only
-        }
+        // List of background colors
+        val backgroundColors = listOf(
+            ContextCompat.getColor(this, R.color.brightPink),
+            ContextCompat.getColor(this, R.color.brightRed),
+            ContextCompat.getColor(this, R.color.brightYellow),
+            ContextCompat.getColor(this, R.color.darkGreen),
+            ContextCompat.getColor(this, R.color.brightBlue),
+            ContextCompat.getColor(this, R.color.darkPurple),
+            ContextCompat.getColor(this, R.color.brightGreen)
+        )
 
+// List of text colors
+        val textColors = listOf(
+            ContextCompat.getColor(this, R.color.black),
+            ContextCompat.getColor(this, R.color.white),
+            ContextCompat.getColor(this, R.color.textDarkRed),
+            ContextCompat.getColor(this, R.color.lightYellow),
+            ContextCompat.getColor(this, R.color.textDarkPurple),
+            ContextCompat.getColor(this, R.color.lightPink),
+            ContextCompat.getColor(this, R.color.lightAquaGreen),
+            ContextCompat.getColor(this, R.color.textDarkGreen)
+        )
 
         // Set up RecyclerView
         stickerSheetsRecyclerView.layoutManager = LinearLayoutManager(this)
-        stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles) { title ->
+        stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles, this, backgroundColors, textColors) { title ->
             val intent = Intent(this, SavedStickerSheetActivity::class.java)
             intent.putExtra("title", title)
             startActivity(intent)
@@ -81,12 +100,6 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
             stickerSheetsRecyclerView.visibility = View.VISIBLE // Show RecyclerView
         }
 
-        stickerSheetAdapter.setOnItemClickListener { title ->
-            // Pass the title to SavedStickerSheetActivity and open the sheet
-            val intent = Intent(this, SavedStickerSheetActivity::class.java)
-            intent.putExtra("title", title)
-            startActivity(intent)
-        }
 
     }
 }
