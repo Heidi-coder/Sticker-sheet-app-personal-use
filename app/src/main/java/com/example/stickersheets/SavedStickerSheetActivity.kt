@@ -14,7 +14,7 @@ import android.content.Intent
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import org.json.JSONObject
-
+import org.json.JSONArray
 
 
 
@@ -215,11 +215,32 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
+
         val stickerSheetJson = JSONObject().apply {
             put("title", title)
             put("backgroundColor", backgroundColor)
             put("textColor", textColor)
-            put("tableData", tableData)
+            put("category1", category1)
+            put("task_1_1", task1_1)
+            put("task_1_2", task1_2)
+            put("task_1_3", task1_3)
+            put("category2", category2)
+            put("task_2_1", task2_1)
+            put("task_2_2", task2_2)
+            put("task_2_3", task2_3)
+            put("category3", category3)
+            put("task_3_1", task3_1)
+            put("task_3_2", task3_2)
+            put("task_3_3", task3_3)
+            put("category4", category4)
+            put("task_4_1", task4_1)
+            put("task_4_2", task4_2)
+            put("task_4_3", task4_3)
+            put("category5", category5)
+            put("task_5_1", task5_1)
+            put("task_5_2", task5_2)
+            put("task_5_3", task5_3)
+
         }
 
 
@@ -228,7 +249,7 @@ class SavedStickerSheetActivity : AppCompatActivity() {
         editor.apply()
 
         val savedData = sharedPreferences.getString(title, "No Data Found") // Retrieve using the same key (title)
-
+        Log.d("SavedData", savedData ?: "No data found")
 
     }
 }

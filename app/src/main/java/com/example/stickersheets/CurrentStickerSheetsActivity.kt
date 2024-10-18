@@ -80,7 +80,7 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         // Set up RecyclerView
         stickerSheetsRecyclerView.layoutManager = LinearLayoutManager(this)
         stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles, this, backgroundColors, textColors) { title ->
-            val intent = Intent(this, SavedStickerSheetActivity::class.java)
+            val intent = Intent(this, ReopenedStickerSheetActivity::class.java)
             intent.putExtra("title", title)
             startActivity(intent)
         }
