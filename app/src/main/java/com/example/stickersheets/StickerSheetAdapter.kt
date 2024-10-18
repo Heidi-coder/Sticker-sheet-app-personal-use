@@ -10,15 +10,31 @@ import androidx.core.content.ContextCompat
 import android.content.Intent
 import org.json.JSONObject
 import org.json.JSONArray
+import android.app.AlertDialog
+
 
 
 class StickerSheetAdapter(
-    private val stickerSheets: List<String>,
+    private val stickerSheets: MutableList<String>,
     private val context: Context,
     private val backgroundColors: List<Int>, // List of background colors
     private val textColors: List<Int>, // List of text colors
-    private val clickListener: (String) -> Unit
+    private val listener: OnStickerSheetClickListener
 ) : RecyclerView.Adapter<StickerSheetAdapter.ViewHolder>() {
+
+    interface OnStickerSheetClickListener {
+        fun onStickerSheetClick(position: Int) // This is the method signature
+        fun onDeleteStickerSheet(title: String)
+    }
+
+    fun removeStickerSheet(title: String) {
+        val position = stickerSheets.indexOf(title)
+        if (position != -1) {
+            stickerSheets.removeAt(position)  // Ensure stickerSheetTitles is mutable (e.g., MutableList)
+            notifyItemRemoved(position)
+        }
+    }
+
 
     // ViewHolder class for handling individual list items
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -129,6 +145,7 @@ class StickerSheetAdapter(
     }
 
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val stickerSheetTitle = stickerSheets[position]
         holder.stickerTitle.text = stickerSheetTitle
@@ -178,5 +195,20 @@ class StickerSheetAdapter(
             }
             context.startActivity(intent)
         }
+
+        holder.itemView.setOnLongClickListener {
+            // Show confirmation dialog
+            AlertDialog.Builder(context)
+                .setTitle("Delete Sticker Sheet")
+                .setMessage("Are you sure you want to delete this sticker sheet?")
+                .setPositiveButton("Delete") { dialog, which ->
+                    // Delete the sticker sheet
+                    listener.onDeleteStickerSheet(stickerSheetTitle)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+            true
+        }
+
     }
 }

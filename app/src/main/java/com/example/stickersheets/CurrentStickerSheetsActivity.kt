@@ -1,5 +1,6 @@
 package com.example.stickersheets
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,12 +19,12 @@ import androidx.core.content.ContextCompat
 
 
 
-class CurrentStickerSheetsActivity : AppCompatActivity() {
+class CurrentStickerSheetsActivity : AppCompatActivity(), StickerSheetAdapter.OnStickerSheetClickListener {
 
     private lateinit var noSheetsMessage: TextView
     private lateinit var stickerSheetsRecyclerView: RecyclerView
     private lateinit var stickerSheetAdapter: StickerSheetAdapter
-
+    private lateinit var stickerSheetTitles: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +37,7 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         }
 
         noSheetsMessage = findViewById(R.id.noSheetsMessage)
-        stickerSheetsRecyclerView =
-            findViewById(R.id.stickerSheetsRecyclerView)
+        stickerSheetsRecyclerView = findViewById(R.id.stickerSheetsRecyclerView)
         val backToHomeButton = findViewById<Button>(R.id.backToHomeButton)
 
         backToHomeButton.setOnClickListener {
@@ -49,7 +49,7 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         val allEntries = sharedPreferences.all
 
         // Extract the titles (which will be the keys)
-        val stickerSheetTitles = ArrayList<String>()
+        stickerSheetTitles = ArrayList()
         for ((key, _) in allEntries) {
             key?.let { stickerSheetTitles.add(it) }
         }
@@ -57,39 +57,28 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
         // List of background colors
         val backgroundColors = listOf(
             ContextCompat.getColor(this, R.color.brightPink),
-            ContextCompat.getColor(this, R.color.brightRed),
-            ContextCompat.getColor(this, R.color.brightYellow),
-            ContextCompat.getColor(this, R.color.darkGreen),
-            ContextCompat.getColor(this, R.color.brightBlue),
-            ContextCompat.getColor(this, R.color.darkPurple),
-            ContextCompat.getColor(this, R.color.brightGreen)
+            ContextCompat.getColor(this, R.color.white)
         )
 
-// List of text colors
+        // List of text colors
         val textColors = listOf(
             ContextCompat.getColor(this, R.color.black),
-            ContextCompat.getColor(this, R.color.white),
-            ContextCompat.getColor(this, R.color.textDarkRed),
-            ContextCompat.getColor(this, R.color.lightYellow),
-            ContextCompat.getColor(this, R.color.textDarkPurple),
-            ContextCompat.getColor(this, R.color.lightPink),
-            ContextCompat.getColor(this, R.color.lightAquaGreen),
             ContextCompat.getColor(this, R.color.textDarkGreen)
         )
 
         // Set up RecyclerView
         stickerSheetsRecyclerView.layoutManager = LinearLayoutManager(this)
-        stickerSheetAdapter = StickerSheetAdapter(stickerSheetTitles, this, backgroundColors, textColors) { title ->
-            val intent = Intent(this, ReopenedStickerSheetActivity::class.java)
-            intent.putExtra("title", title)
-            startActivity(intent)
-        }
+        stickerSheetAdapter = StickerSheetAdapter(
+            stickerSheetTitles,
+            this,  // 'this' for click listener
+            backgroundColors,
+            textColors,
+            this  // 'this' for delete listener
+        )
 
         stickerSheetsRecyclerView.adapter = stickerSheetAdapter
 
         stickerSheetAdapter.notifyDataSetChanged() // Ensure the RecyclerView is aware of data changes
-
-
 
         // Check if there are no sheets and update visibility accordingly
         if (stickerSheetTitles.isEmpty()) {
@@ -99,7 +88,32 @@ class CurrentStickerSheetsActivity : AppCompatActivity() {
             noSheetsMessage.visibility = View.GONE // Hide message if there are sheets
             stickerSheetsRecyclerView.visibility = View.VISIBLE // Show RecyclerView
         }
+    }
 
+    // Handle sticker sheet click
+    override fun onStickerSheetClick(position: Int) {
+        val selectedTitle = stickerSheetTitles[position]
 
+        // Use an Intent to open the SavedStickerSheetActivity and pass the necessary data
+        val intent = Intent(this, SavedStickerSheetActivity::class.java)
+        intent.putExtra("STICKER_SHEET_TITLE", selectedTitle)
+
+        // Start the new activity with the selected sticker sheet's data
+        startActivity(intent)
+    }
+
+    // Handle delete sticker sheet
+    override fun onDeleteStickerSheet(title: String) {
+        deleteStickerSheet(title) // Call your delete function here
+        // Optionally, update the RecyclerView to reflect the deletion
+        stickerSheetTitles.remove(title)
+        stickerSheetAdapter.notifyDataSetChanged()
+    }
+
+    private fun deleteStickerSheet(title: String) {
+        val sharedPreferences = getSharedPreferences("StickerSheets", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(title)
+        editor.apply()
     }
 }
